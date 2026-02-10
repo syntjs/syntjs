@@ -1,0 +1,61 @@
+{
+  "name": "syntjs",
+  "version": "0.0.1-alpha.0",
+  "description": "SyntJS - Synthesize the best of React and Vue",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./jsx": {
+      "types": "./dist/jsx/index.d.ts",
+      "import": "./dist/jsx/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "bench": "node benchmarks/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "framework",
+    "react",
+    "vue",
+    "synthesis",
+    "frontend",
+    "javascript",
+    "typescript"
+  ],
+  "author": "SyntJS Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syntjs/syntjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/syntjs/syntjs/issues"
+  },
+  "homepage": "https://github.com/syntjs/syntjs#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitest": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
