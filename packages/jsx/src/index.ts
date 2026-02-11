@@ -1,4 +1,4 @@
-import { createElement } from './jsx-runtime'
+import { createElement } from '@syntjs/jsx'
 export { jsx, jsxs, jsxDEV, createElement, Fragment } from './jsx-runtime';
 export type { SyntVNode, SyntJSXElement } from './types';
 

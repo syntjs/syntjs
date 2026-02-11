@@ -5,41 +5,11 @@ import { computed, lazyComputed } from './computed';
 export { reactive, ref, readonly, shallowReactive } from './reactivity';
 export { computed, lazyComputed } from './computed';
 export { effect } from './reactivity';
+export {createComponentInstance, mountComponent} from './component-system'
+
 
 // React-like API for React developers
-export function useState<T>(initialValue: T): [() => T, (value: T) => void] {
-    const state = ref(initialValue);
-    return [
-        () => state.value,
-        (value: T) => { state.value = value; }
-    ];
-}
-
-export function useEffect(fn: () => void | (() => void), deps?: any[]): void {
-  effect(() => {
-    const cleanup = fn();
-    return () => {
-      if (typeof cleanup === 'function') {
-        cleanup();
-      }
-    };
-  });
-}
-
-
-export function useMemo<T>(factory: () => T, deps?: any[]): T {
-    const memoized = ref<T | null>(null);
-    const depsRef = ref(deps);
-
-    effect(() => {
-        const newValue = factory();
-        if (memoized.value !== newValue) {
-            memoized.value = newValue;
-        }
-    });
-
-    return memoized.value!;
-}
+export { useState, useStateSimple, useMemo } from './hooks'; //
 
 // Vue-like API for Vue developers (alias)
 export { reactive as defineReactive };

@@ -5,7 +5,7 @@ type Dep = Set<ReactiveEffect>;
 type KeyToDepMap = Map<any, Dep>;
 const targetMap = new WeakMap<any, KeyToDepMap>();
 
-interface ReactiveEffect<T = any> {
+export interface ReactiveEffect<T = any> {
     (): T;
     deps: Dep[];
     active: boolean;

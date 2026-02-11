@@ -2,45 +2,42 @@ import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
-    // Vite build config
     build: {
         lib: {
-            entry: resolve(__dirname, 'packages/core/src/index.ts'),
+            entry: resolve(__dirname, 'src/index.ts'),
             name: 'SyntJS',
             fileName: (format) => {
-                if (format === 'es') return 'syntjs.esm.js';
-                if (format === 'cjs') return 'syntjs.cjs.js';
-                if (format === 'umd') return 'syntjs.umd.js';
+                if (format === 'es') return 'index.js';
+                if (format === 'cjs') return 'index.cjs';
                 return `syntjs.${format}.js`;
             },
-            formats: ['es', 'cjs', 'umd']
+            formats: ['es', 'cjs']
         },
         rollupOptions: {
+            // КРИТИЧЕСКИ ВАЖНО: Убираем ВСЕ external
+            // Пусть Rollup включает всё в бандл
             external: [],
             output: {
+                // Это заставляет Rollup включать все импорты в один файл
+                inlineDynamicImports: true,
                 globals: {},
                 exports: 'named'
             }
         },
-        sourcemap: true,
-        minify: true
+        // Увеличим лимит для больших бандлов
+        chunkSizeWarningLimit: 1000
     },
-
-    // Vitest test config
     test: {
         globals: true,
-        environment: 'jsdom',
-        include: ['packages/**/*.{test,spec}.{js,ts}'],
-        exclude: ['node_modules', 'dist'],
-        coverage: {
-            provider: 'v8',
-            reporter: ['text', 'json', 'html'],
-            exclude: ['**/*.test.ts', '**/*.spec.ts']
-        }
+        environment: 'jsdom'
     },
 
-    // Опционально: Vite dev server config
-    server: {
-        port: 3000
+    // Настраиваем alias чтобы TypeScript и Vite находили файлы
+    resolve: {
+        alias: {
+            '@syntjs/core': resolve(__dirname, 'packages/core/src'),
+            '@syntjs/jsx': resolve(__dirname, 'packages/jsx/src'),
+            '@syntjs/renderer': resolve(__dirname, 'packages/renderer/src')
+        }
     }
 });

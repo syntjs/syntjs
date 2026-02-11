@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SyntJS - Proper Architecture Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #app {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .counter {
+            font-size: 72px;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            color: #667eea;
+            transition: color 0.3s;
+        }
+
+        .counter.negative {
+            color: #f56565;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .decrement {
+            background: #f56565;
+            color: white;
+        }
+
+        .reset {
+            background: #a0aec0;
+            color: white;
+        }
+
+        .increment {
+            background: #48bb78;
+            color: white;
+        }
+
+        .stats {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .stats h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .stats p {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .features {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- App will be mounted here -->
+    <p style="text-align: center; color: #718096;">
+        Loading SyntJS application...
+    </p>
+</div>
+
+<script type="module">
+  import { createApp, useState, createElement } from '../dist/index.js';
+
+  console.log('🚀 SyntJS v0.0.1-alpha loaded');
+
+  function Counter() {
+    const [count, setCount] = useState(0);
+    const [clicks, setClicks] = useState(0);
+
+    const increment = () => {
+      console.log('increment');
+      setCount(count + 1);
+      setClicks(clicks + 1);
+      console.log('increment', count);
+    };
+
+    const decrement = () => {
+      console.log('Reset decrement');
+      setCount(count - 1);
+      setClicks(clicks + 1);
+      console.log('decrement', count);
+    };
+
+    const reset = () => {
+      console.log('Reset click');
+      setCount(0);
+      setClicks(clicks + 1);
+    };
+
+    return createElement('div', null, [
+      createElement('h1', null, 'SyntJS Counter'),
+      createElement('p', { className: 'subtitle' },
+        'React-like hooks + Vue-like reactivity'
+      ),
+
+      createElement('div', {
+        className: `counter ${count < 0 ? 'negative' : ''}`
+      }, count.toString()),
+
+      createElement('div', { className: 'buttons' }, [
+        createElement('button', {
+          className: 'decrement',
+          onClick: decrement
+        }, '- Decrement'),
+
+        createElement('button', {
+          className: 'reset',
+          onClick: reset
+        }, 'Reset'),
+
+        createElement('button', {
+          className: 'increment',
+          onClick: increment
+        }, '+ Increment')
+      ]),
+
+      createElement('div', { className: 'stats' }, [
+        createElement('h3', null, 'Application Status'),
+        createElement('p', null,
+          `Total clicks: ${clicks} | Current count: ${count}`
+        ),
+        createElement('div', { className: 'badge' },
+          'SyntJS v0.0.1-alpha'
+        ),
+
+        createElement('div', { className: 'features' }, [
+          createElement('span', { className: 'feature-tag' }, 'Reactive Components'),
+          createElement('span', { className: 'feature-tag' }, 'Hooks API'),
+          createElement('span', { className: 'feature-tag' }, 'Virtual DOM'),
+          createElement('span', { className: 'feature-tag' }, 'TypeScript')
+        ])
+      ]),
+
+      createElement('p', {
+        style: {
+          marginTop: '20px',
+          textAlign: 'center',
+          color: '#a0aec0',
+          fontSize: '14px'
+        }
+      }, 'Built with SyntJS - The React+Vue Synthesis')
+    ]);
+  }
+
+  // Создаем и монтируем приложение
+  console.log('Mounting SyntJS application...');
+  try {
+    const app = createApp(Counter);
+    app.mount('#app');
+    console.log('✅ SyntJS application mounted successfully!');
+
+    // Добавим тестовые кнопки в консоль
+    console.log('Try these commands in console:');
+    console.log('1. app.mount("#app") - remount');
+    console.log('2. app.unmount() - cleanup');
+  } catch (error) {
+    console.error('❌ Error mounting app:', error);
+    document.getElementById('app').innerHTML =
+      '<div style="color: red; padding: 20px; border: 2px solid red; border-radius: 8px;">' +
+      '<h2>Error loading SyntJS</h2>' +
+      '<pre>' + error.toString() + '</pre>' +
+      '</div>';
+  }
+</script>
+</body>
+</html>

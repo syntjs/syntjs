@@ -13,14 +13,37 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    // JSX поддержка
-    "jsx": "react-jsx",
-    "jsxImportSource": "@syntjs/jsx",
 
-    // Для поддержки JSX в тестах
-    "types": ["vitest/globals", "node"]
+    // Убираем rootDir или ставим корень проекта
+    "rootDir": ".",
+
+    // JSX настройки
+    "jsx": "react-jsx",
+    "jsxImportSource": "./packages/jsx/src",
+
+    // Alias paths для импортов
+    "baseUrl": ".",
+    "paths": {
+      "@syntjs/*": ["packages/*/src"],
+      "syntjs": ["src/index.ts"]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+
+  // Включаем ВСЕ файлы которые нужны
+  "include": [
+    "src/**/*",
+    "packages/**/src/**/*",
+    "packages/**/__tests__/**/*",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "examples",
+    "benchmarks"
+  ]
 }

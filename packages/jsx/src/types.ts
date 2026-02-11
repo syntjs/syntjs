@@ -7,7 +7,7 @@ export interface SyntVNode {
     children: SyntVNode[];
     el?: HTMLElement | Text;
     key?: string | number;
-    __isVNode: true;
+    __isVNode: boolean;
 }
 
 // JSX Element (what users create)
