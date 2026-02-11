@@ -1,0 +1,46 @@
+{
+  "name": "@syntjs/jsx",
+  "version": "0.0.1-alpha.0",
+  "description": "JSX runtime for SyntJS - compatible with React JSX",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./jsx-runtime": {
+      "types": "./dist/jsx-runtime.d.ts",
+      "import": "./dist/jsx-runtime.js"
+    },
+    "./jsx-dev-runtime": {
+      "types": "./dist/jsx-dev-runtime.d.ts",
+      "import": "./dist/jsx-dev-runtime.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc && vite build",
+    "test": "vitest"
+  },
+  "keywords": ["jsx", "react", "syntjs", "runtime"],
+  "author": "SyntJS Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/syntjs/syntjs.git",
+    "directory": "packages/jsx"
+  },
+  "peerDependencies": {
+    "@syntjs/core": "0.0.1-alpha.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitest": "^1.1.0"
+  }
+}

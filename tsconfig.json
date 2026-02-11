@@ -13,7 +13,13 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    // JSX поддержка
+    "jsx": "react-jsx",
+    "jsxImportSource": "@syntjs/jsx",
+
+    // Для поддержки JSX в тестах
+    "types": ["vitest/globals", "node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
