@@ -3,14 +3,17 @@ export const TextSymbol = Symbol('syntjs.text');
 export const FragmentSymbol = Symbol('syntjs.fragment');
 
 export interface SyntVNode {
+    id: number,
     type: string | Function | symbol;
     props: Record<string, any>;
     children: SyntVNode[];
     el?: HTMLElement | Text | null;
     key?: string | number | null;
-    __isVNode: true;
+    parent: SyntVNode | null;  // 👈 ДОБАВЛЯЕМ!
+    __isVNode: boolean;
 }
 
+let vnodeId = 0;
 // Фабрики VNode
 export function createElement(
     type: string | Function | symbol,
@@ -30,23 +33,32 @@ export function createElement(
             return createTextVNode('');
         });
 
-    return {
+    const vnode = {
+        id: ++vnodeId,
         type,
         props: props || {},
         children: normalizedChildren,
         key: props?.key ?? null,
         el: null,
+        parent: null,  // 👈 БУДЕТ УСТАНОВЛЕНО ПОЗЖЕ
         __isVNode: true
     };
+
+    // Устанавливаем parent для детей
+    vnode.children.forEach(child => child.parent = vnode);
+
+    return vnode;
 }
 
 export function createTextVNode(text: string): SyntVNode {
     return {
+        id: ++vnodeId,
         type: TextSymbol,
         props: { nodeValue: text },
         children: [],
         key: undefined,
         el: null,
+        parent: null,  // 👈 БУДЕТ УСТАНОВЛЕНО ПОЗЖЕ
         __isVNode: true
     };
 }

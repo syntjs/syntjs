@@ -37,3 +37,19 @@ coverage/
 # Misc
 *.tmp
 *.temp
+
+# Build outputs
+*.js
+*.js.map
+*.cjs
+*.mjs
+!*.config.js  # исключение для конфигов
+!vite.config.js
+!vitest.config.js
+
+# Source maps
+*.ts.map
+
+# TypeScript - но сохраняем d.ts
+*.d.ts.map
+# НЕ игнорируем d.ts! они нужны для типов

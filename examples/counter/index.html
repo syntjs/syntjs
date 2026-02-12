@@ -244,6 +244,13 @@
             font-size: 13px;
             font-weight: 500;
             border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .feature-tag:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
         }
 
         .footer {
@@ -280,11 +287,20 @@
 <div class="app" id="app"></div>
 
 <script type="module">
-  import { createApp, useState, createElement } from '../../dist/index.js';
+  import { createApp, useState, useEffect, createElement } from '../../dist/index.js';
 
   function Counter() {
     const [count, setCount] = useState(0);
     const [clicks, setClicks] = useState(0);
+
+    // Логируем изменения для демонстрации useEffect
+    useEffect(() => {
+      console.log(`🎯 Count changed to: ${count}`);
+    }, [count]);
+
+    useEffect(() => {
+      console.log(`🖱️ Total clicks: ${clicks}`);
+    }, [clicks]);
 
     const increment = () => {
       setCount(c => c + 1);
@@ -314,16 +330,16 @@
           createElement('div', { className: 'title' }, '✨ SyntJS Counter'),
           createElement('div', { className: 'subtitle' }, [
             createElement('span', null, 'React + Vue = ❤️'),
-            createElement('span', { className: 'badge' }, 'v0.0.1-alpha')
+            createElement('span', { className: 'badge' }, 'v0.1.0')
           ])
         ]),
-        createElement('span', { className: 'version' }, 'core-only')
+        createElement('span', { className: 'version' }, 'Virtual DOM ✓')
       ]),
 
       // Counter Display
       createElement('div', { className: 'count-display' }, [
         createElement('div', {
-          className: `count-number ${count < 0 ? 'negative' : ''}`
+          className: `count-number ${count < 0 ? 'negative' : 'ке'}`
         }, String(count)),
         createElement('div', { className: 'count-label' }, status)
       ]),
@@ -385,14 +401,16 @@
         ])
       ]),
 
-      // Features
+      // Features - ОБНОВЛЕННЫЕ БЕЙДЖИ!
       createElement('div', { className: 'features' }, [
-        createElement('span', { className: 'feature-tag' }, '⚡ Reactive'),
+        createElement('span', { className: 'feature-tag' }, '⚛️ Reactive'),
         createElement('span', { className: 'feature-tag' }, '🎣 Hooks'),
         createElement('span', { className: 'feature-tag' }, '🎨 No JSX'),
         createElement('span', { className: 'feature-tag' }, '📦 5kb'),
         createElement('span', { className: 'feature-tag' }, '🎭 Pure'),
-        createElement('span', { className: 'feature-tag' }, '🔥 Fast')
+        createElement('span', { className: 'feature-tag' }, '⚡ Virtual DOM'),
+        createElement('span', { className: 'feature-tag' }, '🔥 Fast'),
+        createElement('span', { className: 'feature-tag' }, '✨ TypeScript')
       ]),
 
       // Footer
@@ -405,12 +423,13 @@
   }
 
   // Initialize
-  console.log('🚀 Starting SyntJS...');
+  console.log('🚀 Starting SyntJS with Virtual DOM...');
 
   try {
     const app = createApp(Counter);
     app.mount('#app');
     console.log('✅ SyntJS Counter mounted!');
+    console.log('🎯 Virtual DOM is WORKING!');
 
     // Debug
     window.syntjs = app;

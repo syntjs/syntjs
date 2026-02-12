@@ -1,6 +1,6 @@
-import type { ComponentInstance } from '../types';
-import type { SyntVNode } from '../vnode';
+import type { ComponentInstance } from '../types/component';
 import { mountVNode } from './render';
+import { diff, patch } from '../vdom';
 
 let currentInstance: ComponentInstance | null = null;
 let instanceId = 0;
@@ -33,10 +33,7 @@ export function createComponentInstance(
         _isUpdating: false,
 
         update: function() {
-            // КРИТИЧЕСКИ ВАЖНО: порядок проверок!
-            if (this._isUpdating) return;
-            if (!this.container) return;
-            if (!this.isMounted) return;
+            if (!this.container || this._isUpdating || !this.isMounted) return;
 
             this._isUpdating = true;
             const prevInstance = currentInstance;
@@ -51,9 +48,23 @@ export function createComponentInstance(
                     return;
                 }
 
-                this.vnode = newVNode;
-                this.container.innerHTML = '';
-                mountVNode(newVNode, this.container);
+                if (this.vnode && this.container) {
+                    const patches = diff(this.vnode, newVNode, [], 0, this.container);
+                    patch(this.container, patches);
+
+                    // 🔥🔥🔥 ЕДИНСТВЕННОЕ ПРАВИЛЬНОЕ РЕШЕНИЕ!
+                    this.vnode = {...newVNode, ...this.vnode};
+
+                } else {
+                    this.container.innerHTML = '';
+                    mountVNode(newVNode, this.container);
+                    this.vnode = newVNode;
+                }
+
+                if (this._pendingEffects && this._pendingEffects.length > 0) {
+                    this._pendingEffects.forEach(effect => effect());
+                    this._pendingEffects = [];
+                }
 
             } catch (error) {
                 console.error('Update error:', error);

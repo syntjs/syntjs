@@ -11,6 +11,7 @@ export {
     mountComponent,
     getCurrentInstance,
     setCurrentInstance,
+    mountVNode,
 } from './component';
 
 // Hooks
@@ -36,5 +37,6 @@ export function createApp(component: Function) {
     };
 }
 
+export { diff, patch } from './vdom'
 // Re-export createElement from jsx
 //export { jsx as createElement } from '@syntjs/jsx';

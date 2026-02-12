@@ -11,7 +11,6 @@ export function jsx(
     key?: string | number
 ): SyntVNode {
     const { children, ...rest } = props || {};
-    console.log('jsx call')
     // ✅ Просто передаем в createElement
     return createElement(
         type,
