@@ -1,48 +1,40 @@
-// Сначала импортируем всё что нужно
-import { reactive, ref, readonly, shallowReactive, effect } from './reactivity';
-import { computed, lazyComputed } from './computed';
-// Core reactivity exports
-export { reactive, ref, readonly, shallowReactive } from './reactivity';
-export { computed, lazyComputed } from './computed';
-export { effect } from './reactivity';
-export {createComponentInstance, mountComponent} from './component-system'
+import type { ComponentInstance } from './types';
+import { createComponentInstance, mountComponent } from './component'
+// Types
+export type { SyntVNode, ComponentInstance } from './types';
+export { TextSymbol, FragmentSymbol, createElement } from './vnode';
+// Reactivity
+export { reactive, ref, effect, isRef } from './reactivity';
+// Component
+export {
+    createComponentInstance,
+    mountComponent,
+    getCurrentInstance,
+    setCurrentInstance,
+} from './component';
 
+// Hooks
+export { useState, useStateSimple, useEffect, useMemo } from './hooks';
 
-// React-like API for React developers
-export { useState, useStateSimple, useMemo } from './hooks'; //
+// Public API
+export function createApp(component: Function) {
+    let instance: ComponentInstance | null = null;
 
-// Vue-like API for Vue developers (alias)
-export { reactive as defineReactive };
-export { ref as defineRef };
-export { computed as defineComputed };
-
-// Utility functions
-export function isReactive(value: any): boolean {
-    return value && typeof value === 'object' && '__v_isReactive' in value;
+    return {
+        mount(selector: string | HTMLElement) {
+            instance = createComponentInstance(component, {});
+            mountComponent(instance, selector);
+            return this;
+        },
+        unmount() {
+            instance?.unmount();
+            instance = null;
+        },
+        getInstance() {
+            return instance;
+        }
+    };
 }
 
-export function isRef(value: any): boolean {
-    return value && typeof value === 'object' && 'value' in value;
-}
-
-// Batch updates for performance
-let batchQueue: (() => void)[] = [];
-let batchScheduled = false;
-
-export function batch(callback: () => void): void {
-    if (batchScheduled) {
-        callback();
-        return;
-    }
-
-    batchScheduled = true;
-    batchQueue.push(callback);
-
-    Promise.resolve().then(() => {
-        const queue = batchQueue;
-        batchQueue = [];
-        batchScheduled = false;
-
-        queue.forEach(fn => fn());
-    });
-}
+// Re-export createElement from jsx
+//export { jsx as createElement } from '@syntjs/jsx';

@@ -4,46 +4,18 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "declaration": true,
-    "declarationMap": true,
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-
-    // Убираем rootDir или ставим корень проекта
     "rootDir": ".",
-
-    // JSX настройки
-    "jsx": "react-jsx",
-    "jsxImportSource": "./packages/jsx/src",
-
-    // Alias paths для импортов
     "baseUrl": ".",
     "paths": {
-      "@syntjs/*": ["packages/*/src"],
-      "syntjs": ["src/index.ts"]
+      "@syntjs/core": ["./packages/core/src"],
+      "@syntjs/jsx": ["./packages/jsx/src"]
     }
   },
-
-  // Включаем ВСЕ файлы которые нужны
-  "include": [
-    "src/**/*",
-    "packages/**/src/**/*",
-    "packages/**/__tests__/**/*",
-    "vite.config.ts",
-    "vitest.config.ts"
-  ],
-
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "examples",
-    "benchmarks"
-  ]
+  "include": ["packages/**/src"],
+  "exclude": ["node_modules", "dist"]
 }

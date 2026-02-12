@@ -145,108 +145,22 @@
 </div>
 
 <script type="module">
-  import { createApp, useState, createElement } from '../dist/index.js';
-
-  console.log('🚀 SyntJS v0.0.1-alpha loaded');
+  import { createApp, useState } from '../dist/index.js'
 
   function Counter() {
     const [count, setCount] = useState(0);
-    const [clicks, setClicks] = useState(0);
 
-    const increment = () => {
-      console.log('increment');
-      setCount(count + 1);
-      setClicks(clicks + 1);
-      console.log('increment', count);
-    };
-
-    const decrement = () => {
-      console.log('Reset decrement');
-      setCount(count - 1);
-      setClicks(clicks + 1);
-      console.log('decrement', count);
-    };
-
-    const reset = () => {
-      console.log('Reset click');
-      setCount(0);
-      setClicks(clicks + 1);
-    };
-
-    return createElement('div', null, [
-      createElement('h1', null, 'SyntJS Counter'),
-      createElement('p', { className: 'subtitle' },
-        'React-like hooks + Vue-like reactivity'
-      ),
-
-      createElement('div', {
-        className: `counter ${count < 0 ? 'negative' : ''}`
-      }, count.toString()),
-
-      createElement('div', { className: 'buttons' }, [
-        createElement('button', {
-          className: 'decrement',
-          onClick: decrement
-        }, '- Decrement'),
-
-        createElement('button', {
-          className: 'reset',
-          onClick: reset
-        }, 'Reset'),
-
-        createElement('button', {
-          className: 'increment',
-          onClick: increment
-        }, '+ Increment')
-      ]),
-
-      createElement('div', { className: 'stats' }, [
-        createElement('h3', null, 'Application Status'),
-        createElement('p', null,
-          `Total clicks: ${clicks} | Current count: ${count}`
-        ),
-        createElement('div', { className: 'badge' },
-          'SyntJS v0.0.1-alpha'
-        ),
-
-        createElement('div', { className: 'features' }, [
-          createElement('span', { className: 'feature-tag' }, 'Reactive Components'),
-          createElement('span', { className: 'feature-tag' }, 'Hooks API'),
-          createElement('span', { className: 'feature-tag' }, 'Virtual DOM'),
-          createElement('span', { className: 'feature-tag' }, 'TypeScript')
-        ])
-      ]),
-
-      createElement('p', {
-        style: {
-          marginTop: '20px',
-          textAlign: 'center',
-          color: '#a0aec0',
-          fontSize: '14px'
-        }
-      }, 'Built with SyntJS - The React+Vue Synthesis')
-    ]);
+    return (
+      <div>
+        <h1>Count: {count}</h1>
+        <button onClick={() => setCount(c => c + 1)}>
+          Increment
+        </button>
+      </div>
+    );
   }
 
-  // Создаем и монтируем приложение
-  console.log('Mounting SyntJS application...');
-  try {
-    const app = createApp(Counter);
-    app.mount('#app');
-    console.log('✅ SyntJS application mounted successfully!');
-
-    // Добавим тестовые кнопки в консоль
-    console.log('Try these commands in console:');
-    console.log('1. app.mount("#app") - remount');
-    console.log('2. app.unmount() - cleanup');
-  } catch (error) {
-    console.error('❌ Error mounting app:', error);
-    document.getElementById('app').innerHTML =
-      '<div style="color: red; padding: 20px; border: 2px solid red; border-radius: 8px;">' +
-      '<h2>Error loading SyntJS</h2>' +
-      '<pre>' + error.toString() + '</pre>' +
-      '</div>';
-  }
+  createApp(Counter).mount('#app');
 </script>
 </body>
 </html>

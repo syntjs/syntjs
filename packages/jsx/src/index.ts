@@ -1,17 +1,24 @@
-import { createElement } from '@syntjs/jsx'
-export { jsx, jsxs, jsxDEV, createElement, Fragment } from './jsx-runtime';
-export type { SyntVNode, SyntJSXElement } from './types';
+import type { SyntVNode } from '@syntjs/core';
+// 🔥 Импортируем createElement из core!
+import { createElement, FragmentSymbol, TextSymbol } from '@syntjs/core';
 
-// Auto-set JSX pragma for TypeScript
-if (typeof global !== 'undefined') {
-    (global as any).JSX = { Fragment: Symbol('Fragment') };
-}
+export const Fragment = FragmentSymbol;
 
-// Helper for manual JSX usage
-export function h(
-    type: string | Function,
+// ⚠️ jsx - это просто обертка над createElement
+export function jsx(
+    type: string | Function | symbol,
     props: Record<string, any> | null,
-    ...children: any[]
-) {
-    return createElement(type, props, ...children);
+    key?: string | number
+): SyntVNode {
+    const { children, ...rest } = props || {};
+    console.log('jsx call')
+    // ✅ Просто передаем в createElement
+    return createElement(
+        type,
+        { ...rest, key: key ?? rest?.key },
+        ...(Array.isArray(children) ? children : [children])
+    );
 }
+
+export const jsxs = jsx;
+export const jsxDEV = jsx;

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntJS - Counter Demo</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(145deg, #0B1120 0%, #192132 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .counter-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 48px 40px;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .counter-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .version {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .count-display {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .count-display::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+        }
+
+        .count-number {
+            font-size: 120px;
+            font-weight: 700;
+            line-height: 1;
+            color: white;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .count-number.negative {
+            color: #f87171;
+            text-shadow: 0 0 30px rgba(248, 113, 113, 0.5);
+        }
+
+        .count-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-top: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .btn-decrement {
+            background: linear-gradient(145deg, #b91c1c, #991b1b);
+            box-shadow: 0 8px 16px -4px rgba(185, 28, 28, 0.3);
+        }
+
+        .btn-reset {
+            background: linear-gradient(145deg, #4b5563, #374151);
+            box-shadow: 0 8px 16px -4px rgba(55, 65, 81, 0.3);
+        }
+
+        .btn-increment {
+            background: linear-gradient(145deg, #059669, #047857);
+            box-shadow: 0 8px 16px -4px rgba(5, 150, 105, 0.3);
+        }
+
+        .stats-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stats-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 16px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .features {
+            margin-top: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .feature-tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a5b4fc;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+        }
+
+        @media (max-width: 640px) {
+            .counter-card {
+                padding: 32px 24px;
+            }
+
+            .count-number {
+                font-size: 80px;
+            }
+
+            .button-grid {
+                gap: 12px;
+            }
+
+            .btn {
+                padding: 14px 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script type="module">
+  import { createApp, useState, createElement } from '../../dist/index.js';
+
+  function Counter() {
+    const [count, setCount] = useState(0);
+    const [clicks, setClicks] = useState(0);
+
+    const increment = () => {
+      setCount(c => c + 1);
+      setClicks(c => c + 1);
+    };
+
+    const decrement = () => {
+      setCount(c => c - 1);
+      setClicks(c => c + 1);
+    };
+
+    const reset = () => {
+      setCount(0);
+      setClicks(c => c + 1);
+    };
+
+    const isEven = count % 2 === 0;
+    const parity = isEven ? 'Even' : 'Odd';
+    const status = count === 0 ? 'Zero' : count > 0 ? 'Positive' : 'Negative';
+    const trend = count === 0 ? 'Neutral' : count > 0 ? 'Bullish' : 'Bearish';
+    const trendColor = count === 0 ? '#a5b4fc' : count > 0 ? '#4ade80' : '#f87171';
+
+    return createElement('div', { className: 'counter-card' }, [
+      // Header
+      createElement('div', { className: 'header' }, [
+        createElement('div', null, [
+          createElement('div', { className: 'title' }, '✨ SyntJS Counter'),
+          createElement('div', { className: 'subtitle' }, [
+            createElement('span', null, 'React + Vue = ❤️'),
+            createElement('span', { className: 'badge' }, 'v0.0.1-alpha')
+          ])
+        ]),
+        createElement('span', { className: 'version' }, 'core-only')
+      ]),
+
+      // Counter Display
+      createElement('div', { className: 'count-display' }, [
+        createElement('div', {
+          className: `count-number ${count < 0 ? 'negative' : ''}`
+        }, String(count)),
+        createElement('div', { className: 'count-label' }, status)
+      ]),
+
+      // Buttons
+      createElement('div', { className: 'button-grid' }, [
+        createElement('button', {
+          className: 'btn btn-decrement',
+          onClick: decrement
+        }, [
+          createElement('span', null, '−'),
+          ' Decrement'
+        ]),
+        createElement('button', {
+          className: 'btn btn-reset',
+          onClick: reset
+        }, [
+          createElement('span', null, '↺'),
+          ' Reset'
+        ]),
+        createElement('button', {
+          className: 'btn btn-increment',
+          onClick: increment
+        }, [
+          createElement('span', null, '+'),
+          ' Increment'
+        ])
+      ]),
+
+      // Statistics
+      createElement('div', { className: 'stats-panel' }, [
+        createElement('div', { className: 'stats-title' }, [
+          createElement('span', null, '📊'),
+          ' Statistics'
+        ]),
+        createElement('div', { className: 'stats-grid' }, [
+          createElement('div', { className: 'stat-item' }, [
+            createElement('div', { className: 'stat-label' }, 'Current'),
+            createElement('div', { className: 'stat-value' }, String(count))
+          ]),
+          createElement('div', { className: 'stat-item' }, [
+            createElement('div', { className: 'stat-label' }, 'Total Clicks'),
+            createElement('div', { className: 'stat-value' }, String(clicks))
+          ]),
+          createElement('div', { className: 'stat-item' }, [
+            createElement('div', { className: 'stat-label' }, 'Parity'),
+            createElement('div', { className: 'stat-value' }, parity)
+          ]),
+          createElement('div', { className: 'stat-item' }, [
+            createElement('div', { className: 'stat-label' }, 'Trend'),
+            createElement('div', {
+              className: 'stat-value',
+              style: {
+                fontSize: '24px',
+                color: trendColor
+              }
+            }, trend)
+          ])
+        ])
+      ]),
+
+      // Features
+      createElement('div', { className: 'features' }, [
+        createElement('span', { className: 'feature-tag' }, '⚡ Reactive'),
+        createElement('span', { className: 'feature-tag' }, '🎣 Hooks'),
+        createElement('span', { className: 'feature-tag' }, '🎨 No JSX'),
+        createElement('span', { className: 'feature-tag' }, '📦 5kb'),
+        createElement('span', { className: 'feature-tag' }, '🎭 Pure'),
+        createElement('span', { className: 'feature-tag' }, '🔥 Fast')
+      ]),
+
+      // Footer
+      createElement('div', { className: 'footer' }, [
+        'Built with ',
+        createElement('span', { style: { color: '#a5b4fc' } }, 'SyntJS'),
+        ' — The best of both worlds'
+      ])
+    ]);
+  }
+
+  // Initialize
+  console.log('🚀 Starting SyntJS...');
+
+  try {
+    const app = createApp(Counter);
+    app.mount('#app');
+    console.log('✅ SyntJS Counter mounted!');
+
+    // Debug
+    window.syntjs = app;
+    console.log('📝 Try: syntjs.getInstance()._hooks[0].setter(c => c + 10)');
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+</script>
+</body>
+</html>
